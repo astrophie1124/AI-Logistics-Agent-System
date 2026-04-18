@@ -48,7 +48,7 @@ User → Webhook → AI Agent → Tools (Sheets / Vector DB / OCR) → Output
 
 ##  Workflow Preview
 
-(Add your screenshot here)
+![workflow](./screenshot.png)
 
 Example:
 
