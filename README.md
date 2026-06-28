@@ -2,9 +2,7 @@
 
 > 基于 n8n + LLM + WhatsApp 构建的物流行业一体化自动化解决方案：智能客服机器人 + 三层架构财务周报自动化工作流。
 
-[![n8n](https://img.shields.io/badge/built%20with-n8n-EA4B71)](https://n8n.io/)
-[![WhatsApp](https://img.shields.io/badge/integration-WhatsApp-25D366)](https://www.whatsapp.com/)
-[![LLM](https://img.shields.io/badge/AI-LLM%20Agent-blueviolet)](#)
+
 
 ---
 
@@ -140,8 +138,8 @@ docker run -it --rm -p 5678:5678 n8nio/n8n
 - RK 订单查询演示：自动回填收货时间、货品数量
 - 客户订单表单校验演示
 
-> 建议在此处插入实际视频/截图链接，例如：
-> `![demo](docs/demo.gif)` 或 YouTube/Bilibili 嵌入链接
+> 视频链接
+>https://xmueducn-my.sharepoint.com/:v:/g/personal/cst2309186_xmu_edu_my/IQBnSI02UrYTQKhtnUgr2RAuAYVGfJZbMNWYrZ6-BM6utus?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=Vbqoo0
 
 ---
 
@@ -159,12 +157,5 @@ docker run -it --rm -p 5678:5678 n8nio/n8n
 └── LICENSE
 ```
 
----
-
-##  License
-
-建议根据实际情况添加 LICENSE 文件（如 MIT）。
-
----
 
 > 本项目为团队分享项目，由三位发言人分别讲解客服功能、财务工作流设计与业务价值总结。
