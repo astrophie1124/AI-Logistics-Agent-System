@@ -103,11 +103,9 @@
 - **交互渠道**：WhatsApp（扫码接入）
 - **数据源**：Google Sheets（入库 Inbound 系统等）
 - **报表输出**：HTML 邮件报表（部门版 / 高管版）
-
->  以下为待补充信息，建议根据实际情况修改：
-> - 具体使用的 LLM 模型/服务商 - gemini-2.5-flash
-> - WhatsApp 接入方式（第三方网关）
-> - 工单系统对接方式 - 投诉处理节点通过 Google Sheets 节点的 append（追加行） 操作，把投诉信息写入一张 Google Sheet 表格，以此作为轻量级工单台账——并没有对接 Jira/Zendesk 等专业工单系统。
+- **LLM 模型**：Gemini（2.5 Flash）
+- **WhatsApp 接入**：基于 whatsapp-web.js 自建本地网关，非官方 Business API
+- **工单系统**：通过 Google Sheets append 操作实现轻量级工单台账，未对接 Jira/Zendesk 等专业系统
 
 ---
 
@@ -128,23 +126,13 @@ docker run -it --rm -p 5678:5678 n8nio/n8n
 
 # 4. 配置凭证
 # - Google Sheets OAuth2（需在 Google Cloud Console 配置 OAuth 同意屏幕 + 重定向 URI）
-# - WhatsApp 渠道凭证
+# - WhatsApp：需先部署本地 whatsapp-web.js 网关服务（wa-local-api），扫码登录获取 session
 # - LLM API Key
 
 # 5. 扫码激活 WhatsApp，开始测试
 ```
 
----
 
-## 📹 演示视频
-
-- RK 订单查询演示：自动回填收货时间、货品数量
-- 客户订单表单校验演示
-
-> 视频链接
->https://xmueducn-my.sharepoint.com/:v:/g/personal/cst2309186_xmu_edu_my/IQBnSI02UrYTQKhtnUgr2RAuAYVGfJZbMNWYrZ6-BM6utus?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=Vbqoo0
-
----
 
 
 
