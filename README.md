@@ -146,19 +146,7 @@ docker run -it --rm -p 5678:5678 n8nio/n8n
 
 ---
 
-## 项目结构
 
-```
-.
-├── workflows/              # n8n 工作流 JSON 导出文件
-│   ├── chatbot-whatsapp.json
-│   ├── finance-layer1-merge.json
-│   ├── finance-layer2-metrics.json
-│   └── finance-layer3-report.json
-├── docs/                    # 文档、截图、演示视频
-├── README.md
-└── LICENSE
-```
 
 
 > 本项目为团队分享项目，由三位发言人分别讲解客服功能、财务工作流设计与业务价值总结。
