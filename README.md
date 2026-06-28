@@ -1,7 +1,7 @@
 # 全球物流 AI 助手 + 自动化财务报告系统
 
 > 基于 n8n + LLM + WhatsApp 构建的物流行业一体化自动化解决方案：智能客服机器人 + 三层架构财务周报自动化工作流。
-
+https://github.com/astrophie1124/AI-Logistics-Agent-System/blob/main/screenshot.png
 
 
 ---
