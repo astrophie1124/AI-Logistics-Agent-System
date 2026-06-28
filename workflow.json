@@ -1,0 +1,3014 @@
+{
+  "name": "LogiBrain Global AI Logistics",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -3456,
+        1728
+      ],
+      "id": "cda5c479-5c02-45c4-b64d-a944b41eb13e",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "3509446f-380f-4e40-a2bf-5441c3e60180",
+              "leftValue": "={{ $json.row_number }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "7743abfb-d6b3-414b-b01f-20e3b2b481f4",
+              "leftValue": "={{ $json['Customer Name'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "886bdcff-9e2f-446b-a7fc-928103519e57",
+              "leftValue": "={{ $json['Order No.'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "76d3e328-ce12-4e5e-a5b1-f81d22404ac3",
+              "leftValue": "={{ $json['Outbound Order No.'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "2c7faff6-7f32-4b59-b20e-5a6bd74fa7ae",
+              "leftValue": "={{ $json['Outbound Type'] }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "bde160c4-513b-4499-8d5b-2fb15b513f0a",
+              "leftValue": "={{ $json['Product Type'] }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "bad65894-08bf-4cd2-b3d0-7a859e1cb14a",
+              "leftValue": "={{ $json['Outbound Quantity'] }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "37eef27f-ee15-4b5e-9929-4294c242fd0e",
+              "leftValue": "={{ $json['Receivable Logistics Price'] }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "ea8c2848-4fc9-4db6-85bc-7c89307d23f3",
+              "leftValue": "={{ $json['Logistics Information'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -2576,
+        1552
+      ],
+      "id": "856e185f-03d3-4fcf-8ccd-d62ba93660e0",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Role: Senior Logistics Finance Expert.\nTask: Generate an HTML email for each customer based on the current JSON data.\n\n\n- Customer Name: {{ $json.customerName }}\n- Report Month: {{ $json.reportDate }}\n- Storage Items (JSON): {{ JSON.stringify($json.storageItems) }}\n- Shipping Items (JSON): {{ JSON.stringify($json.shippingItems) }}\n- Total Storage: {{ $json.totalStorageSum }} MYR\n- Total Logistics: {{ $json.totalLogisticsSum }} MYR\n- Grand Total: {{ $json.grandTotal }} MYR\n\nRequirements:\n1. Output ONLY the raw HTML code for the email body.\n2. Include two separate tables: one for Storage (Order No, Fee) and one for Shipping (Outbound No, Fee).\n3. Style the tables with clean, inline CSS (border, padding, light grey header).\n4. Tone: Professional, polite business English.\n5. Reminder: Kindly ask for payment within 5 working days.\n6.Each customer only needs one email, which covers the information related to the category contained in their name.\n7.The sender is listed as: Global AI",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -1616,
+        1376
+      ],
+      "id": "feb28797-1d04-421f-a0bf-04b7d19aba65",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Sorting by name and calculation').item.json.email }}",
+        "subject": "Financial Report",
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -720,
+        1376
+      ],
+      "id": "d6a558e9-3184-4357-911c-ffeda6d46982",
+      "name": "Send a message3",
+      "webhookId": "fa1ee3b3-f8b9-4274-8092-f7b2a7af4147",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wQNDKyWLXM8t5FDi",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1FZW7iZGd8WNlSJnsrJYsV5EGt72adBeBec_sLB06rcM",
+          "mode": "list",
+          "cachedResultName": "n8n",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FZW7iZGd8WNlSJnsrJYsV5EGt72adBeBec_sLB06rcM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1102264640,
+          "mode": "list",
+          "cachedResultName": "Inbound Receipt",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FZW7iZGd8WNlSJnsrJYsV5EGt72adBeBec_sLB06rcM/edit#gid=1102264640"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -2976,
+        1856
+      ],
+      "id": "dc486708-5fd6-4e86-a0a2-d284967484a3",
+      "name": "Inbound",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "TwrAR5nuEuo01pxx",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1FZW7iZGd8WNlSJnsrJYsV5EGt72adBeBec_sLB06rcM",
+          "mode": "list",
+          "cachedResultName": "n8n",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FZW7iZGd8WNlSJnsrJYsV5EGt72adBeBec_sLB06rcM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2092158754,
+          "mode": "list",
+          "cachedResultName": "Outbound Receipt",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FZW7iZGd8WNlSJnsrJYsV5EGt72adBeBec_sLB06rcM/edit#gid=2092158754"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -2976,
+        2032
+      ],
+      "id": "eae59409-5244-4ff2-b86e-600d4fe467cf",
+      "name": "outbound",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "TwrAR5nuEuo01pxx",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "options": {}
+      },
+      "id": "9fab44da-9ae8-4a40-9235-4b2cdff01f7c",
+      "name": "Default Data Loader",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "position": [
+        -2352,
+        864
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "memoryKey": "logistics"
+      },
+      "id": "213edb29-6bc8-4046-9442-02a73497acfb",
+      "name": "Create Product Catalogue",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "position": [
+        -2320,
+        640
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=={{ $json.finalText }}",
+        "options": {
+          "systemMessage": "# Context: Multi-User Group Chat Environment\nYou are an advanced AI customer service agent operating within a busy WhatsApp Group.\n1. You will ONLY respond when explicitly mentioned via \"@chatbot\". Do NOT reply to normal chatter among users.\n2. NEVER include \"@chatbot\" in your own responses.\n3. Group chats are fast-paced and noisy; keep your replies highly concise, polite, and scannable. Use bullet points if listing multiple items.\n\n# 1. CRITICAL: STRICT LANGUAGE MIRRORING (APPLIES TO PART 1 ONLY)\nYou MUST detect the user's language and mirror it perfectly in your natural language response (Part 1).\n- User types English -> Reply 100% in English.\n- User types Simplified/Traditional Chinese -> Reply 100% in Chinese.\n- User types Malay -> Reply 100% in Malay.\nCORE RULE: If you use tools (like a Tracking API or Vector Store) that return data in another language, you MUST seamlessly translate that data into the user's language BEFORE outputting it. Do not mix languages.\n\n# 2. Identity & Tone\nYou are the \"Global Logistics Elite Assistant.\"\n- Persona: Professional, empathetic, highly efficient, and solution-oriented.\n- Constraint: Do NOT hallucinate logistics policies. If a question is outside your knowledge base, politely inform the user and state that you will record the query.\n\n# 3. Intent Classification (The \"Action\" System)\nAnalyze the user's input and categorize it into ONE of the following Actions:\n- [Action A - Consult]: For general greetings, pricing inquiries, policy questions (use Vector Store), or tracking status requests.\n- [Action B - Crisis & Complaints]: For damaged goods, severe delays, lost parcels, or bad service. \n- [Action C - Proactive Booking]: When a user explicitly wants to ship a new parcel. You must extract: Item, Weight, Destination, Sender. If any are missing, ask for them politely.\n- [Action D - Human Escalation]: TRIGGER IMMEDIATELY if the user uses words like \"human\", \"manager\", \"人工\", \"客服\", or displays extreme anger/profanity. Apologize empathetically and state a human supervisor will take over.\n\n# 4. TOOL USAGE RULES & RAG SEARCH STRATEGY (CRITICAL)\nBefore generating your final response, you MUST use the appropriate database tool to find accurate data. Do not hallucinate.\n\nSYSTEM REQUIREMENT: For any query regarding specific order numbers (DD, RK, or CK), you are FORBIDDEN from answering based on your internal memory. You MUST trigger the corresponding tool first based on this strict ID-based routing logic:\n- IF ID starts with \"DD\" (Customer Order): You MUST ONLY call `Customer_Order_Form` for storage fees, in-stock quantity, or order details.\n- IF ID starts with \"RK\" (Inbound): You MUST ONLY call `Warehouse_Inbound_Records` to check arrival time and received quantity.\n- IF ID starts with \"CK\" (Outbound): \n  -- Call `Warehouse_Outbound_Details` to check shipping fees (Logistics Amount), packed items, or destination address.\n  -- Call `Shipping_Sheet` ONLY IF the user asks for the courier tracking status or current location of the parcel.\n\n[Database Search Strategy ]\nWhen searching a Database or Google Sheet for a specific order, you MUST search ONLY using the EXACT ALPHANUMERIC ID. Do NOT append column names or extra keywords to the ID, otherwise the database will return zero results.\n- Bad Tool Query: \"DD20250722-001 Storage Fee\" (Fails because the database looks for this exact long string)\n- Good Tool Query: \"DD20250722-001\" (Search ONLY the exact ID. The tool will return the entire row, and you can read the Storage Fee from the retrieved JSON data).\n\n[Vector/Policy Search Strategy]\nONLY when the user asks a general policy/rule question (WITHOUT an order ID), use the Vector Store. \nCRITICAL SEARCH RULE: \n1. Translate the query to English.\n2. Extract ONLY 2-3 broad concepts and keywords (nouns/verbs). Do NOT use full sentences.\n3. Use synonyms or related terms if the exact word isn't found.\n- Bad Tool Query: \"如果客户寄带电池的产品怎么收费\" (Fails: Not English, full sentence)\n- Good Tool Query: \"Battery electronic restricted items shipping cost policy\" (Succeeds: Broad semantic keywords)\n\n[Rules of Engagement]\n1. Exact Match for IDs: Always use the exact alphanumeric string (e.g., DD20250722-001) as the SOLE input for your database tool search.\n2. Wait for Data: Take your time to execute the tool. Only output the final \"Strict Output Schema\" AFTER the tool returns the data and you have read the relevant fields (like Storage Fee).\n\n# 5. Strict Output Schema\nAFTER using the necessary tools, your FINAL response MUST consist of TWO parts separated by EXACTLY three dashes (---).\nCRITICAL: While Part 1 must be in the user's language, the ENTIRE JSON block in Part 2 MUST BE WRITTEN STRICTLY IN ENGLISH ONLY for backend processing.\n\n# 6. DATA DICTIONARY & TOOL SCHEMA MAPPING (CRITICAL)\nYou MUST choose the exact tool based on the specific fields the user is asking for to prevent mixing up similar columns across databases.\n\n[Customer_Order_Form] - USE EXCLUSIVELY FOR WAREHOUSING & STOCK DATA (DD IDs):\n- \"Storage Fee\" -> Search this tool for `Storage Fee Receivable (MYR)`. Do NOT confuse this with shipping fees.\n- \"Quantity / In stock\" -> Search this tool for `Quantity` (The total number of units ordered or stored).\n- \"Customer Name\" -> The registered name making the order.\n- \"Order Time\" -> Date/time order was placed.\n- \"Product Type\" -> Hardware model.\n\n[Warehouse_Inbound_Records] - USE EXCLUSIVELY FOR GOODS ARRIVING AT THE WAREHOUSE (RK IDs):\n- \"Arrival Time / Receipt Time\" -> Search this tool for `Receipt Time`.\n- \"Quantity Received / Arrived\" -> Search this tool for `Total Qty` or `Qty Stocked In`. DO NOT confuse with Outbound Qty.\n- \"Signed By / Receiver\" -> Search this tool for `Received By`.\n- \"Product Model / Arrived Item\" -> Search this tool for `Product Name` or `Model`.\n\n[Warehouse_Outbound_Details] - USE EXCLUSIVELY FOR OUTBOUND, DISPATCH & SHIPPING FEES (CK IDs):\n- \"Logistics Fee / Shipping Amount\" -> Search this tool for `Total Logistics Amount / RM` or `Logistics Subtotal / RM`. NEVER use this for Storage Fee.\n- \"Shipping Address / Destination\" -> Search this tool for `Shipping Address (City)` or `Shipping Address (State/Province)`.\n- \"Outbound Quantity / Shipped Items\" -> Search this tool for `Total Outbound Quantity` or `Outbound Qty`.\n- \"Outbound Date / Dispatch Time\" -> Search this tool for `Outbound Date`.\n- \"Model / Specification\" -> Search this tool for `Specification / Model`.\n- \"Dispatcher / Responsible Person / 负责人\" -> Read `Outbound Operator`. (CRITICAL: You MUST check this exact column to tell the user who dispatched the item. If the value is empty/null, state explicitly that the operator is unrecorded).\n\n[Shipping_Sheet] - USE EXCLUSIVELY FOR COURIER STATUS & TRACKING (CK IDs):\n- \"Where is my parcel / Tracking Status\" -> Use this tool to find the carrier name and current transit location. Do NOT use this tool for billing or financial amounts.\n- \"Shipping Fee / Logistics Cost\" -> DO NOT USE THIS TOOL. Use Warehouse_Outbound_Details instead.\n\n[Customer_Shipping_List] - USE EXCLUSIVELY FOR OUTBOUND DISPATCH, ITEMS & SHIPPING FEES (CK IDs):\n- \"Specific Product / Item\" -> Search for `Product Type` (e.g., Catalyst 8300, Dusun Pi4).\n- \"Outbound Quantity / Shipped Items\" -> Search for `Outbound Quantity`. (MUST match the specific Product Type).\n- \"Logistics Fee / Shipping Amount\" -> Search for `Receivable Logistics Price`. NEVER use this for Storage Fee.\n- \"Tracking Number / Address\" -> Search for `Logistics Information` (Contains Tracking No. and Address).\n- \"Outbound Date / Dispatch Time\" -> Search for `Outbound Time`.\n\n<Part 1: Your natural language response matching the user's language. Keep it empathetic but brief.>\n---\n{\n  \"action\": \"A|B|C|D\",\n  \"reason\": \"Briefly explain why you chose this Action IN ENGLISH.\",\n  \"language_detected\": \"English|Chinese|Malay\",\n  \"complaint_reason\": \"CRITICAL: If Action B, output a 2-5 word specific tag STRICTLY IN ENGLISH (e.g., 'Damaged parcel', 'Lost in transit', 'Rude staff'). For all other actions, strictly output 'N/A'.\",\n  \"data\": {\n    \"item\": \"product name in English, 'TBD', or 'N/A'\",\n    \"weight\": \"in kg, 'TBD', or 'N/A'\",\n    \"destination\": \"city/country in English, 'TBD', or 'N/A'\",\n    \"sender\": \"name/phone, 'TBD', or 'N/A'\"\n  }\n}",
+          "maxIterations": 20
+        }
+      },
+      "id": "f6dd4716-f718-45c2-bce5-2e89d6e3aa4d",
+      "name": "AI Sales Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        -1360,
+        192
+      ],
+      "typeVersion": 1.6
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "whatsapp-webhook",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -3008,
+        192
+      ],
+      "id": "11bf9537-ea1f-4b81-844f-4298d9872b3d",
+      "name": "Webhook",
+      "webhookId": "af9449da-2107-4303-a79c-b51ae88bdb18"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-embedding-2-preview"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1424,
+        752
+      ],
+      "id": "80fc1048-831e-4cbc-98d6-bfe15318176f",
+      "name": "Embeddings Google Gemini",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ZchwCBe0TviSqjk2",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "memoryKey": "whatsapp-75"
+      },
+      "id": "abf5dbb0-3eea-4940-9828-5ae61ceb9862",
+      "name": "Logistics Knowledge Base",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "position": [
+        -928,
+        656
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        -2352,
+        1072
+      ],
+      "id": "2e7084ec-36d9-4650-9a81-2d36c672b7c7",
+      "name": "Recursive Character Text Splitter"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        -2544,
+        640
+      ],
+      "id": "7f25fa4f-50e5-483e-9bd5-8c1906f6f1e3",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "name": "Logistics_Knowledge_Base",
+        "description": "MANDATORY TOOL for general logistics policies, rules, carrier info, pricing, or SOPs (NO Order IDs). \nCRITICAL SEARCH RULES: \n1. ALWAYS translate the user's intent into 2-4 BROAD ENGLISH KEYWORDS (nouns/verbs only).\n2. NEVER pass full conversational sentences. \n3. MUST USE SYNONYMS if the user's words are too casual. \nExample A: User asks \"东西弄丢了怎么赔钱\", query ONLY: \"lost parcel compensation insurance\". \nExample B: User asks \"带电池的货怎么算\", query ONLY: \"battery electronic restricted shipping cost\".\nExample C: User asks \"发货延迟了/物流太慢了怎么办\", query ONLY: \"delayed shipment complaint handling discount\".\nThe user has submitted an enquiry regarding logistics services. Please extract the core service name from the enquiry, taking into account any abbreviations that may be used. For example, if the user mentions 'Air Freight', please map this to 'Global Air Freight (Premium)' in the SOP. Please output the optimised search keywords.",
+        "topK": 20
+      },
+      "id": "fb81793c-91b0-4d25-8852-e8a50d2ab2e9",
+      "name": "Logistics_Policy",
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "position": [
+        -688,
+        448
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1FZW7iZGd8WNlSJnsrJYsV5EGt72adBeBec_sLB06rcM",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2092158754,
+          "mode": "list",
+          "cachedResultName": "Outbound Receipt",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FZW7iZGd8WNlSJnsrJYsV5EGt72adBeBec_sLB06rcM/edit#gid=2092158754"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Outbound Order No.",
+              "lookupValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('values0_Value', ``, 'string') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        -1024,
+        432
+      ],
+      "id": "8ae9dc28-7e09-44f9-96b4-ebb178bb0909",
+      "name": "Warehouse_Outbound_Details",
+      "notesInFlow": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "TwrAR5nuEuo01pxx",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "TRIGGER: The user provides an Outbound Order No starting with \"CK\" or asks about dispatch/shipping details.\nACTION: You MUST pass the \"CK\" number to this tool to find: \n1. Packed Product Details (Product Name, Brand, Specification/Model, Outbound Qty).\n2. Shipping Address (City, State/Province).\n3. Outbound Date & Operator.\n4. Total Logistics Amount / RM (Shipping Fees).\nCRITICAL RESTRICTION: NEVER use this tool for finding Storage Fees (Use Order_Inquiry_System). NEVER use this tool for finding the Carrier Name or Tracking Status (Use Logistics_Tracking_Registry)."
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1FZW7iZGd8WNlSJnsrJYsV5EGt72adBeBec_sLB06rcM",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1102264640,
+          "mode": "list",
+          "cachedResultName": "Inbound Receipt",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FZW7iZGd8WNlSJnsrJYsV5EGt72adBeBec_sLB06rcM/edit#gid=1102264640"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Receipt No.",
+              "lookupValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('values0_Value', ``, 'string') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        -848,
+        432
+      ],
+      "id": "8bbcc87a-432d-4a8a-a51b-7192591aae4e",
+      "name": "Warehouse_Inbound_Records",
+      "notesInFlow": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "TwrAR5nuEuo01pxx",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "TRIGGER: The user provides an Inbound Receipt No starting with \"RK\" or asks if their goods have arrived at the warehouse.\nACTION: You MUST pass the \"RK\" number to this tool to find:\n1. Receipt Time / Arrival Date.\n2. Actual Quantity Received (Qty Stocked In / Total Qty).\n3. Received By (Signee) & Warehouse location.\n4. Product Details (Product Name, Brand, Model).\nCRITICAL RESTRICTION: NEVER use this tool for finding Outbound/Shipping status or Storage Fees. This is STRICTLY for INBOUND receiving data."
+    },
+    {
+      "parameters": {
+        "projectId": {
+          "__rl": true,
+          "value": "=project-9e20f40a-3f34-46e2-909",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleVertex",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        656
+      ],
+      "id": "664a0570-d083-4607-b5f4-3efa3c48b90b",
+      "name": "Google Vertex Chat Model",
+      "credentials": {
+        "googleApi": {
+          "id": "qRtQuWuI3myXQDab",
+          "name": "Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "projectId": {
+          "__rl": true,
+          "value": "project-9e20f40a-3f34-46e2-909",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleVertex",
+      "typeVersion": 1,
+      "position": [
+        -1840,
+        432
+      ],
+      "id": "b7c8ce08-8f83-4f52-9b21-0102d1888b3f",
+      "name": "Google Vertex Chat Model1",
+      "credentials": {
+        "googleApi": {
+          "id": "qRtQuWuI3myXQDab",
+          "name": "Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -2704,
+        640
+      ],
+      "id": "8ad309f8-080b-47c3-9b95-90c20abc2206",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "3509446f-380f-4e40-a2bf-5441c3e60180",
+              "leftValue": "={{ $json['Order Time'] }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "7743abfb-d6b3-414b-b01f-20e3b2b481f4",
+              "leftValue": "={{ $json['Order No.'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "886bdcff-9e2f-446b-a7fc-928103519e57",
+              "leftValue": "={{ $json['Customer Name'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "76d3e328-ce12-4e5e-a5b1-f81d22404ac3",
+              "leftValue": "={{ $json['Product Type'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "2c7faff6-7f32-4b59-b20e-5a6bd74fa7ae",
+              "leftValue": "={{ $json.Quantity }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "bde160c4-513b-4499-8d5b-2fb15b513f0a",
+              "leftValue": "={{ $json['Storage Fee Receivable (MYR)'] }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -2576,
+        1376
+      ],
+      "id": "35235cae-f360-4f26-8711-6079e40f1765",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "3509446f-380f-4e40-a2bf-5441c3e60180",
+              "leftValue": "={{ $json.row_number }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "7743abfb-d6b3-414b-b01f-20e3b2b481f4",
+              "leftValue": "={{ $json['Outbound Order No.'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "886bdcff-9e2f-446b-a7fc-928103519e57",
+              "leftValue": "={{ $json['Outbound Time'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "76d3e328-ce12-4e5e-a5b1-f81d22404ac3",
+              "leftValue": "={{ $json['Outbound Type'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "2c7faff6-7f32-4b59-b20e-5a6bd74fa7ae",
+              "leftValue": "={{ $json.Warehouse }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "bde160c4-513b-4499-8d5b-2fb15b513f0a",
+              "leftValue": "={{ $json['Delivery Address'] }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "bad65894-08bf-4cd2-b3d0-7a859e1cb14a",
+              "leftValue": "={{ $json.Goods }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "37eef27f-ee15-4b5e-9929-4294c242fd0e",
+              "leftValue": "={{ $json['SKU Count'] }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "ea8c2848-4fc9-4db6-85bc-7c89307d23f3",
+              "leftValue": "={{ $json.Quantity }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "25693be3-f7e9-4443-9f7f-ed75ebc7f08e",
+              "leftValue": "={{ $json['Shipping Cost (RM)'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -2576,
+        1712
+      ],
+      "id": "76b0387a-f493-4359-95b5-ca4ffbe658fe",
+      "name": "If5"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "68a7da9d-0af0-4463-a244-d1b1769e216e",
+              "leftValue": "={{ $json['Receipt No.'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "0728b6f7-2322-427c-9b93-598111d6f647",
+              "leftValue": "={{ $json['Product Name'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "e037d7a8-a614-4ad4-9715-5aec680f2a84",
+              "leftValue": "={{ $json['Unit Cost (RM)'] }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "2e423ab0-64c7-45dd-8de6-5b48320eecf0",
+              "leftValue": "={{ $json['Total Cost (RM)'] }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "b931a65c-eec4-453d-8231-29548470ccd9",
+              "leftValue": "={{ $json['Received By'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -2576,
+        1856
+      ],
+      "id": "32da9be3-263e-482b-94a7-8f67657f4227",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "e85f3226-b6cf-4f86-9fa2-dac75157cc46",
+              "leftValue": "={{ $json['Outbound Type'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "fdb320d8-6d39-4412-93ea-ea86c7147900",
+              "leftValue": "={{ $json['Outbound Order No.'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "6f1d9a15-159a-4ee6-b955-8b5f63952a06",
+              "leftValue": "={{ $json['Shipping Address (State/Province)'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "480488eb-88f7-45b8-b801-b4b0db0e3420",
+              "leftValue": "={{ $json['Shipping Address (City)'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "af364c6f-5009-4ed6-acde-076046e59b19",
+              "leftValue": "={{ $json['Shipping Address (County/District)'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "cbf5fd1c-593c-45e0-b6e6-88aceaa996ce",
+              "leftValue": "={{ $json['Product Name'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "337c8061-341f-4bcc-8780-693135083061",
+              "leftValue": "={{ $json.Brand }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "89a48420-dde6-47d6-bc12-1dadbb9c7757",
+              "leftValue": "={{ $json['Outbound Qty'] }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "299b39f2-fe4e-49ed-9b19-2095a338e447",
+              "leftValue": "={{ $json['Logistics Subtotal / RM'] }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -2576,
+        2032
+      ],
+      "id": "41a79e50-2829-4872-bfc9-ee271a449965",
+      "name": "If6"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -2080,
+        1376
+      ],
+      "id": "28428452-a6dd-440b-9881-0fe0f283b611",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "sendTo": "2641063724@qq.com",
+        "subject": "=Notification of Incomplete Documentation ——row number：{{ $json.row_number }}",
+        "message": "=<p>Hi,Customer Order Form's data is incomplete（Row number:{{ $json.row_number }}）。</p> ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -2080,
+        1520
+      ],
+      "id": "dcd44c18-8d76-44c5-ac00-fd8a5d9e0821",
+      "name": "错误分支发给管理员",
+      "webhookId": "6e6347f1-7eec-424b-b95f-aa16d2e10805",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wQNDKyWLXM8t5FDi",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "2641063724@qq.com",
+        "subject": "=Notification of Incomplete Documentation ——row number：{{ $json.row_number }}",
+        "message": "=<p>Hi,Shipping Sheet's data is incomplete（Row number:{{ $json.row_number }}）。</p> ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -1728,
+        1744
+      ],
+      "id": "a1d104e0-20be-42a6-9dd9-efcc7d89773d",
+      "name": "错误分支发给管理员1",
+      "webhookId": "6e6347f1-7eec-424b-b95f-aa16d2e10805",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wQNDKyWLXM8t5FDi",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "2641063724@qq.com",
+        "subject": "=Notification of Incomplete Documentation ——row number：{{ $json.row_number }}",
+        "message": "=<p>Hi,Customer Shipment List's data is incomplete（Row number:{{ $json.row_number }}）。</p> ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -2080,
+        1664
+      ],
+      "id": "376afbf2-0349-4ed4-b8bc-81f473d6a795",
+      "name": "错误分支发给管理员2",
+      "webhookId": "6e6347f1-7eec-424b-b95f-aa16d2e10805",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wQNDKyWLXM8t5FDi",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "2641063724@qq.com",
+        "subject": "=Notification of Incomplete Documentation ——{{ $json.row_number }}",
+        "message": "= <p>Hi,Inbound Receipt's data is incomplete（Row number:{{ $json.row_number }}）。</p> ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -1728,
+        1904
+      ],
+      "id": "2dbdf3b3-7592-46fd-9620-3d927bd721a0",
+      "name": "错误分支发给管理员3",
+      "webhookId": "6e6347f1-7eec-424b-b95f-aa16d2e10805",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wQNDKyWLXM8t5FDi",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "2641063724@qq.com",
+        "subject": "=Notification of Incomplete Documentation ——row number：{{ $json.row_number }}",
+        "message": "=<p>Hi,Outbound Receipt's data is incomplete（Row number:{{ $json.row_number }}）。</p> ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -1728,
+        2064
+      ],
+      "id": "c457a4bb-f586-4b2a-8097-3155894b87cc",
+      "name": "错误分支发给管理员4",
+      "webhookId": "6e6347f1-7eec-424b-b95f-aa16d2e10805",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wQNDKyWLXM8t5FDi",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "projectId": {
+          "__rl": true,
+          "value": "project-9e20f40a-3f34-46e2-909",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleVertex",
+      "typeVersion": 1,
+      "position": [
+        -1616,
+        1584
+      ],
+      "id": "51f10d0d-1f0f-4a11-b150-3a0a0c590d01",
+      "name": "Google Vertex Chat Model2",
+      "credentials": {
+        "googleApi": {
+          "id": "qRtQuWuI3myXQDab",
+          "name": "Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "for (let item of $input.all()) {\n  let html = item.json.output || \"\"; \n  if (!html) continue;\n\n  // 1. 去除大模型生成的 ```html 标记\n  html = html.replace(/```html/gi, '').replace(/```/g, '');\n\n  // 2. 转换加粗为 WhatsApp 格式\n  let text = html.replace(/<strong[^>]*>(.*?)<\\/strong>/gi, '*$1*');\n  text = text.replace(/<b[^>]*>(.*?)<\\/b>/gi, '*$1*');\n\n  // 3. 遇到段落、换行、标题、表格行，转换为换行符\n  text = text.replace(/<br\\s*[\\/]?>|<\\/p>|<\\/div>|<\\/h[1-6]>|<\\/tr>/gi, '\\n');\n  \n  // 4. 表格列对齐 (用2个空格隔开)\n  text = text.replace(/<\\/td>|<\\/th>/gi, '  ');\n  \n  // 5. 暴力扒皮：无差别抹掉所有剩下的 < > 标签，处理 &nbsp;\n  text = text.replace(/<[^>]+>/g, '');\n  text = text.replace(/&nbsp;/g, ' ');\n\n  // ==========================================\n  // 🚀 核心修复：真空压缩排版 (专门对付多余空行)\n  // ==========================================\n  \n  // a. 把所有横向连续的空格/Tab压缩为一个空格\n  text = text.replace(/[ \\t]+/g, ' '); \n  \n  // b. 【关键】剔除每一行开头和结尾的多余空格！(这样带空格的空行就会变成纯空行)\n  text = text.replace(/^[ \\t]+|[ \\t]+$/gm, '');\n  \n  // c. 放心大胆地把 3 个以上的连续换行压缩成最多 2 个 (完美保留段落间距)\n  text = text.replace(/\\n{3,}/g, '\\n\\n'); \n  \n  // 把洗干净的极速文本存入新字段\n  item.json.whatsapp_message = text.trim();\n}\n\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -720,
+        1136
+      ],
+      "id": "841e0e57-a2ce-4bfd-bd65-f4fd471287e1",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "sendTo": "elvinahyx@outlook.com",
+        "subject": "Contact details missing",
+        "emailType": "text",
+        "message": "={{ $('Sorting by name and calculation').item.json.customerName }} contact details missing",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -720,
+        1616
+      ],
+      "id": "9b2e77be-9d81-4ccf-984b-152a03355dcb",
+      "name": "Send a message",
+      "webhookId": "18fae91e-aa8b-4a55-b385-7809578b1a6b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wQNDKyWLXM8t5FDi",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "whatsapp-75-{{ $json.messages[0].from }}",
+        "contextWindowLength": 6
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1696,
+        432
+      ],
+      "id": "306e4c7d-278a-4524-85b3-f2ff2afae44b",
+      "name": "Simple Memory1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:3000/send",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('Sorting by name and calculation').item.json.phone }}@c.us"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.whatsapp_message }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b832248f-5170-4dbd-a1d1-60d574deb636",
+      "name": "🚨 Send the financial report to the customer service manager",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        -272,
+        1136
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 获取来自 Merge 节点的所有原始行数据\nconst items = $input.all();\nconst reportMap = {};\n\nfor (const item of items) {\n    const data = item.json;\n    \n    // 1. 标准化客户姓名\n    let name = data['Customer Name'];\n    if (!name) continue;\n    name = name.toString().trim();\n\n    // 2. 初始化客户结构（保留了 phone 和 sendChannel）\n    if (!reportMap[name]) {\n        reportMap[name] = {\n            customerName: name,\n            email: \"\",           \n            phone: \"\",           \n            sendChannel: \"\",\n            storageItems: [],    \n            shippingItems: [],   \n            totalStorageFee: 0,\n            totalLogisticsFee: 0\n        };\n    }\n\n    // 3. 匹配联系方式与发送渠道逻辑（恢复原始逻辑）\n    if (data['WhatsApp Number']) reportMap[name].phone = data['WhatsApp Number'].toString().trim();\n    if (data['Email']) reportMap[name].email = data['Email'].toString().trim();\n\n    if (reportMap[name].phone) {\n        reportMap[name].sendChannel = \"whatsapp\";\n    } else if (reportMap[name].email) {\n        reportMap[name].sendChannel = \"gmail\";\n    }\n\n    // 4. 处理仓储费 (仅保留订单号和费用)\n    if (data['Storage Fee Receivable (MYR)']) {\n        const fee = parseFloat(data['Storage Fee Receivable (MYR)']) || 0;\n        reportMap[name].totalStorageFee += fee;\n        reportMap[name].storageItems.push({\n            \"orderNo\": data['Order No.'],\n            \"fee\": fee.toFixed(2)\n        });\n    }\n\n    // 5. 处理物流费 (仅保留出库单号和费用)\n    if (data['Receivable Logistics Price']) {\n        const price = parseFloat(data['Receivable Logistics Price']) || 0;\n        reportMap[name].totalLogisticsFee += price;\n        reportMap[name].shippingItems.push({\n            \"outboundNo\": data['Outbound Order No.'],\n            \"fee\": price.toFixed(2)\n        });\n    }\n}\n\n// 6. 最终输出\nreturn Object.values(reportMap).map(data => {\n    return {\n        json: {\n            ...data, // 展开所有字段，包括 phone 和 sendChannel\n            totalStorageSum: data.totalStorageFee.toFixed(2),\n            totalLogisticsSum: data.totalLogisticsFee.toFixed(2),\n            grandTotal: (data.totalStorageFee + data.totalLogisticsFee).toFixed(2),\n            reportDate: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long' })\n        }\n    };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1856,
+        1376
+      ],
+      "id": "c838e0df-2e6a-43f1-90a2-2bf784479a02",
+      "name": "Sorting by name and calculation"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.ocr.space/parse/image",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "K88707682788957"
+            },
+            {
+              "name": "language",
+              "value": "eng"
+            },
+            {
+              "name": "base64Image",
+              "value": "=\"data:\" + $json.body.mimeType + \";base64,\" + $json.body.media"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "88ccaf2d-807d-485f-9612-bbaca6d8d002",
+      "name": "Free OCR engine",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        -2256,
+        96
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c0e63de6-1234-4a58-8888-999999999999",
+              "name": "finalText",
+              "value": "={{ $('Interceptor: Is it @Chatbot?').item.json.body.body }}\n\n[图片识别出的物流/运单信息]：\n{{ $json.ParsedResults[0].ParsedText }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8397cd98-47b8-4acd-a0fd-9a02370883a6",
+      "name": "Collage (Set)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1968,
+        96
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c0e63de6-5678-4a58-8888-999999999999",
+              "name": "finalText",
+              "value": "={{ $json.body.body }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6610ee54-bf8a-455c-80f2-b4f97af98003",
+      "name": "Plain Text Direct (Set)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1968,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ ($json.body.body || '').toLowerCase() }}",
+              "operation": "contains",
+              "value2": "@chatbot"
+            }
+          ]
+        }
+      },
+      "id": "460b97d1-6014-4bcb-90da-dcc5505165f3",
+      "name": "Interceptor: Is it @Chatbot?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -2800,
+        192
+      ]
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.body.type }}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "image"
+            },
+            {
+              "value2": "chat",
+              "output": 1
+            }
+          ]
+        },
+        "fallbackOutput": 1
+      },
+      "id": "e43939cb-0573-4cc8-8811-f57bfaf2b439",
+      "name": "Message type router",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        -2560,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "for (const item of $input.all()) {\n  const raw = item.json.output || '';\n  let clean = raw;\n  let action = 'A'; // 默认保底\n  let complaintReason = ''; // 🌟 新增：默认客诉原因设为空\n\n  // 1. 暴力清除回复给用户的内容：只要遇到 ---，后面的全部砍掉\n  const splitParts = raw.split('---');\n  clean = splitParts[0].trim();\n  // 万一它没写 ---，也强行把大括号及后面的代码砍掉\n  if (splitParts.length === 1) {\n     const braceIndex = clean.lastIndexOf('{');\n     if (braceIndex !== -1) clean = clean.substring(0, braceIndex).trim();\n  }\n  // 清理残留的 markdown 代码块符号\n  clean = clean.replace(/```json/gi, '').replace(/```/gi, '').trim();\n\n  // 2. 暴力提取背后的动作指令及附加数据\n  try {\n    const match = raw.match(/\\{[\\s\\S]*\\}/);\n    if (match) {\n       const parsed = JSON.parse(match[0]);\n       \n       // 提取动作 Action\n       if (parsed.action) {\n           action = String(parsed.action).trim().toUpperCase();\n       }\n       \n       // 🌟 新增：精准提取客诉原因\n       if (parsed.complaint_reason) {\n           complaintReason = String(parsed.complaint_reason).trim();\n       }\n    }\n  } catch (e) {\n    console.log('JSON 解析失败');\n  }\n\n  // 3. 把所有干净的数据打包，发往下一站 (Google Sheets / 发送节点)\n  item.json.cleanReply = clean;\n  item.json.action = action;\n  item.json.rawOutput = raw;\n  item.json.complaint_reason = complaintReason; // 🌟 新增：将原因暴露给后面的节点\n}\nreturn $input.all();"
+      },
+      "id": "aa025eeb-e4c8-4ca4-ae4b-67fd6d84dd83",
+      "name": "Output Parser (Precision Cutting)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -448,
+        192
+      ]
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.action }}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "A"
+            },
+            {
+              "value2": "B",
+              "output": 1
+            },
+            {
+              "value2": "C",
+              "output": 2
+            },
+            {
+              "value2": "D",
+              "output": 3
+            },
+            {}
+          ]
+        },
+        "fallbackOutput": 0
+      },
+      "id": "0e694ee6-fc8d-4bb7-a78b-3810b7182b6c",
+      "name": "Action Dispatcher (Switch)",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        -224,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1dFn-6Ybf2N2DOtJ_V_n1Gj-DbewTHj5LqS2PiC0LsJY",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "工作表1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dFn-6Ybf2N2DOtJ_V_n1Gj-DbewTHj5LqS2PiC0LsJY/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Customer Message": "={{ $('Webhook').item.json.body.body }}",
+            "AI Ruling Reason": "={{ $('Output Parser (Precision Cutting)').item.json.action }}",
+            "Specfic reasons": "={{ $('Output Parser (Precision Cutting)').item.json.complaint_reason }}",
+            "  Time": "={{ $now.format('yyyy-MM-dd HH:mm:ss') }}",
+            "Mobile Number/ Group From ": "={{ $('Webhook').first().json.body.author }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "  Time",
+              "displayName": "  Time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Mobile Number/ Group From ",
+              "displayName": "Mobile Number/ Group From ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Customer Message",
+              "displayName": "Customer Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AI Ruling Reason",
+              "displayName": "AI Ruling Reason",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Specfic reasons",
+              "displayName": "Specfic reasons",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "28845e42-5bad-4910-8f74-12f98c69931c",
+      "name": "Create a customer complaint ticket (Google Sheets)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        0,
+        0
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "TwrAR5nuEuo01pxx",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a93d87cf-ceb0-4d98-935a-d2f06b7b4597",
+              "leftValue": "=={{ $('Output Parser (Precision Cutting)').item.json.rawOutput }}",
+              "rightValue": "TBD",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        0,
+        192
+      ],
+      "id": "1404170b-521e-45f8-bf3f-e256d3c0c8ec",
+      "name": "Is all the data in?"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:3000/send",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('Webhook').first().json.body.from }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $('Output Parser (Precision Cutting)').item.json.cleanReply }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "21bc03fa-c3ee-49c6-b5bf-f8852730a2f5",
+      "name": "Send a clean reply to the user",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        832,
+        176
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:3000/send",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "=60147169753@c.us"
+            },
+            {
+              "name": "text",
+              "value": "=🚨 [Urgent switch to manual alert] 🚨\n\n💬 Group Chat：{{ $('Webhook').first().json.body.author }}\n👤 Customer number: {{ $('Webhook').first().json.body.author }}\n⚠️ Reasoning of the AI: {{ JSON.parse($('Output Parser (Precision Cutting)').item.json.rawOutput.split('---')[1]).reason }}\n💬 The customer’s own words: {{ $('Webhook').first().json.body.body }}\n\n👉 Please go to WhatsApp immediately and reply to this customer as normal (you can simply reply directly; the system has been silenced).。"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6aea84f0-a9f6-427a-975c-ff84d3443330",
+      "name": "🚨 Send an alert to the customer service manager",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        0,
+        448
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://webhook.site/5e09becc-6b69-40f8-b144-8cc241d5fd0d",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "customer",
+              "value": "={{ $('Webhook').first().json.body.author }}"
+            },
+            {
+              "name": "product",
+              "value": "={{ JSON.parse($('Output Parser (Precision Cutting)').item.json.rawOutput.split('---')[1]).data.item }}"
+            },
+            {
+              "name": "weight",
+              "value": "={{ JSON.parse($('Output Parser (Precision Cutting)').item.json.rawOutput.split('---')[1]).data.weight }}"
+            },
+            {
+              "name": "destination",
+              "value": "={{ JSON.parse($('Output Parser (Precision Cutting)').item.json.rawOutput.split('---')[1]).data.destination }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "cffc1216-ec24-4d1d-80e4-222bacd76ed2",
+      "name": "Integration with the WMS Order Creation API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        272,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.to }}",
+        "subject": "={{ $json.subject }}",
+        "message": "={{ $json.html }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        544,
+        1776
+      ],
+      "id": "bdf7d7f0-5f66-4e92-9165-1be1e9bf0ce0",
+      "name": "CEO",
+      "webhookId": "6e87c687-f524-4ac5-b5f2-b1b94e8a816d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wQNDKyWLXM8t5FDi",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        128,
+        1776
+      ],
+      "id": "59e3b544-ca56-4561-94c2-e7c36812fab4",
+      "name": "Merge2"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -992,
+        2784
+      ],
+      "id": "acfeda91-d046-4a39-ba1e-89f2d90e0308",
+      "name": "Simple Memory",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.to }}",
+        "subject": "={{ $json.subject }}",
+        "message": "={{ $json.html }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        528,
+        2336
+      ],
+      "id": "acfdee03-99c5-4384-84eb-e037df9379ac",
+      "name": "Send a message2",
+      "webhookId": "78913995-916f-41ba-8e37-19a133d5e503",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wQNDKyWLXM8t5FDi",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -672,
+        2336
+      ],
+      "id": "68b975b5-4bbd-4ad8-b9b4-26a1ae87d90c",
+      "name": "Merge3"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=请基于输入数据生成 CEO 级周报总结。\n\n严格按下面格式输出纯文本，不要JSON，不要Markdown，不要HTML，不要额外解释：\n\n[EXEC_SUMMARY]\n用2-3句话给出总裁级概览，突出经营重点、风险和亮点。\n[/EXEC_SUMMARY]\n\n[HIGHLIGHTS]\n写3条本周最值得CEO关注的亮点，每条单独一行。\n[/HIGHLIGHTS]\n\n[RISKS]\n写3条本周最值得CEO关注的风险或隐患，每条单独一行。\n[/RISKS]\n\n[DEPT_VIEW]\n分别用1-2句话概括仓库、财务、物流、客服四个部门的情况。\nThe format must be:\nWarehouse: ...\nFinance: ...\nLogistics: ...\nCustomer Service: ...\n[/DEPT_VIEW]\n\n[ACTIONS]\n给出3条总裁级建议，每条单独一行。要求偏管理动作、资源配置、跨部门协同，不要写执行层琐碎建议。\n[/ACTIONS]\n\n要求：\n- 用英文输出\n- 语气要更高层、更克制、更像给 CEO 的经营简报\n- 不要重复图表标题\n- 不要编造不存在的数据\n- 重点看趋势、集中度、异常点、跨部门联动关系\n\n周期：{{$json.week}}\n\n四部门摘要：\n{{ JSON.stringify($json.depts, null, 2) }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -144,
+        1952
+      ],
+      "id": "e2ae3eea-ab60-49b8-a836-ac41a84ed292",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "numberInputs": 4
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -1872,
+        2288
+      ],
+      "id": "f627776b-4387-4021-a890-06a41423d0c4",
+      "name": "Merge4"
+    },
+    {
+      "parameters": {
+        "projectId": {
+          "__rl": true,
+          "value": "project-9e20f40a-3f34-46e2-909",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleVertex",
+      "typeVersion": 1,
+      "position": [
+        -1088,
+        2784
+      ],
+      "id": "cce3f0cf-cd96-48a2-9bbb-de324cc14644",
+      "name": "Google Vertex Chat Model5",
+      "credentials": {
+        "googleApi": {
+          "id": "qRtQuWuI3myXQDab",
+          "name": "Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "projectId": {
+          "__rl": true,
+          "value": "project-9e20f40a-3f34-46e2-909",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleVertex",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        2240
+      ],
+      "id": "a446e3af-a6d4-429c-ab81-8299d93764ff",
+      "name": "Google Vertex Chat Model6",
+      "credentials": {
+        "googleApi": {
+          "id": "qRtQuWuI3myXQDab",
+          "name": "Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const src = $json || {};\n\n// AI text output (compatible with different AI node fields)\nconst aiText = String(\n  src.output ??\n  src.text ??\n  src.response ??\n  src.content ??\n  src.message ??\n  ''\n);\n\nfunction e(s) {\n  return String(s ?? '')\n    .replace(/&/g, '&amp;')\n    .replace(/</g, '&lt;')\n    .replace(/>/g, '&gt;');\n}\n\nfunction pick(tag) {\n  const re = new RegExp(`\\\\[${tag}\\\\]([\\\\s\\\\S]*?)\\\\[\\\\/${tag}\\\\]`, 'i');\n  const m = aiText.match(re);\n  return m ? m[1].trim() : '';\n}\n\nfunction parseList(text) {\n  return String(text || '')\n    .split(/\\r?\\n+/)\n    .map(x => x.replace(/^[\\-\\d\\.\\)\\s、]+/, '').trim())\n    .filter(Boolean)\n    .slice(0, 3);\n}\n\nconst deptName = src.deptName || src.dept || '';\nconst week = src.week || '';\nconst charts = Array.isArray(src.charts) ? src.charts : [];\n\nconst o = pick('O');\nconst c1 = pick('C1');\nconst c2 = pick('C2');\nconst c3 = pick('C3');\nconst s = pick('S');\nconst r = parseList(pick('R'));\n\nconst txt = [c1, c2, c3];\n\nconst chartHtml = charts.map((c, i) => `\n  <div style=\"margin:20px 0;padding:16px;border:1px solid #e5e7eb;border-radius:10px;\">\n    <h3 style=\"margin:0 0 12px;\">${e(c.title || '')}</h3>\n    <img src=\"${e(c.url || '')}\" style=\"max-width:100%;border-radius:8px;\">\n    <p style=\"font-size:14px;line-height:1.8;\">${e(txt[i] || '')}</p>\n  </div>\n`).join('');\n\nconst rec = r.map(x => `<li>${e(x)}</li>`).join('');\n\nconst html = `\n<div style=\"max-width:900px;margin:0 auto;padding:24px;background:#f7f7f7;font-family:Arial;\">\n  <div style=\"background:#fff;padding:24px;border-radius:12px;\">\n    <h1 style=\"margin:0 0 8px;\">${e(deptName)} Weekly Report</h1>\n    <p style=\"margin:0 0 16px;color:#666;\">Period: ${e(week)}</p>\n\n    <h2 style=\"font-size:18px;\">Overview</h2>\n    <p style=\"font-size:14px;line-height:1.8;\">${e(o)}</p>\n\n    ${chartHtml}\n\n    <h2 style=\"font-size:18px;\">Overall Analysis</h2>\n    <p style=\"font-size:14px;line-height:1.8;\">${e(s)}</p>\n\n    <h2 style=\"font-size:18px;\">Recommendations</h2>\n    <ol style=\"font-size:14px;line-height:1.8;\">${rec}</ol>\n  </div>\n</div>`;\n\nconst realToMap = {\n  '仓库': '15005150310@163.com',\n  '财务': '17328235049@163.com',\n  '物流': 'yinpenghua@outlook.com',\n  '客服': 'yinpenghua@outlook.com',\n  'warehouse': '15005150310@163.com',\n  'finance': '17328235049@163.com',\n  'logistics': 'yinpenghua@outlook.com',\n  'customer': 'yinpenghua@outlook.com',\n};\n\nconst rawTo = src.to || '';\nconst to = (!rawTo || /@example\\.com$/i.test(rawTo))\n  ? (realToMap[src.dept] || realToMap[src.deptName] || '')\n  : rawTo;\n\nconst subject = src.subject || `${deptName} Weekly Report｜${week}`;\n\nreturn {\n  json: {\n    to,\n    subject,\n    html\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        80,
+        2336
+      ],
+      "id": "55024160-d5cc-4db8-bb6c-315976744048",
+      "name": "Generate HTML"
+    },
+    {
+      "parameters": {
+        "jsCode": "const inbound = $items('Inbound').map(i => i.json);\nconst outbound = $items('outbound').map(i => i.json);\nconst shipping = $items('Logistics').map(i => i.json);\nconst feedback = $items('Agent_Feedback').map(i => i.json);\n\nconst mail = {\n  warehouse: '15005150310@163.com',\n  finance: '17328235049@163.com',\n  logistics: 'yinpenghua@outlook.com',\n  customer: '2372290190@qq.com',\n};\n\nconst n = v => {\n  if (v === null || v === undefined || v === '') return 0;\n  return +String(v).replace(/,/g, '') || 0;\n};\n\nconst d = v => {\n  if (v === '' || v == null) return null;\n\n  if (typeof v === 'number') {\n    return new Date((v - 25569) * 86400 * 1000);\n  }\n\n  if (v instanceof Date) {\n    return isNaN(v) ? null : v;\n  }\n\n  const s = String(v).trim();\n\n  const m = s.match(/^(\\d{1,2})\\/(\\d{1,2})\\/(\\d{4})(.*)$/);\n  if (m) {\n    const day = m[1].padStart(2, '0');\n    const month = m[2].padStart(2, '0');\n    const year = m[3];\n    const rest = m[4] || '';\n    const x = new Date(`${year}-${month}-${day}${rest}`);\n    return isNaN(x) ? null : x;\n  }\n\n  const x = new Date(s);\n  return isNaN(x) ? null : x;\n};\n\nconst ds = x => x\n  ? `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, '0')}-${String(x.getDate()).padStart(2, '0')}`\n  : '';\n\nconst allDates = [\n  ...inbound.map(r => d(r['Receipt Time'])).filter(Boolean),\n  ...outbound.map(r => d(r['Outbound Date'])).filter(Boolean),\n  ...shipping.map(r => d(r['Outbound Time'])).filter(Boolean),\n  ...feedback.map(r => d(r['  Time'])).filter(Boolean),\n];\n\nconst latestDate = allDates.length\n  ? new Date(Math.max(...allDates.map(x => x.getTime())))\n  : new Date();\n\nconst latestDay = new Date(latestDate);\nlatestDay.setHours(0, 0, 0, 0);\n\nconst start = new Date(latestDay);\nstart.setDate(latestDay.getDate() - 6);\n\nconst endExclusive = new Date(latestDay);\nendExclusive.setDate(latestDay.getDate() + 1);\n\nconst week = `${ds(start)} ~ ${ds(latestDay)}`;\n\nconst inWeek = v => {\n  const x = d(v);\n  return x && x >= start && x < endExclusive;\n};\n\nconst days = Array.from({ length: 7 }, (_, i) => {\n  const x = new Date(start);\n  x.setDate(start.getDate() + i);\n  return ds(x);\n});\n\nconst daySum = (rows, t, k) =>\n  days.map(day =>\n    rows\n      .filter(r => inWeek(r[t]) && ds(d(r[t])) === day)\n      .reduce((s, r) => s + n(r[k]), 0)\n  );\n\nconst grpSum = (rows, g, k, t) =>\n  Object.entries(\n    rows.reduce((m, r) => {\n      if (t && !inWeek(r[t])) return m;\n      const x = String(r[g] || 'Unknown').trim() || 'Unknown';\n      m[x] = (m[x] || 0) + n(r[k]);\n      return m;\n    }, {})\n  ).sort((a, b) => b[1] - a[1]);\n\nconst grpCnt = (rows, g, t, key) =>\n  Object.entries(\n    rows.reduce((m, r) => {\n      if (t && !inWeek(r[t])) return m;\n      if (key && !r[key]) return m;\n      const x = String(r[g] || 'Unknown').trim() || 'Unknown';\n      m[x] = (m[x] || 0) + 1;\n      return m;\n    }, {})\n  ).sort((a, b) => b[1] - a[1]);\n\nconst sum = a => Math.round(a.reduce((s, x) => s + n(x), 0) * 100) / 100;\n\nconst peak = a => {\n  if (!a.length) return 'None';\n  const m = Math.max(...a);\n  return `${days[a.indexOf(m)]}(${Math.round(m * 100) / 100})`;\n};\n\nconst top = (a, k = 3) =>\n  a.slice(0, k).map(x => `${x[0]}:${Math.round(x[1] * 100) / 100}`).join('; ') || 'None';\n\nconst top10 = a =>\n  a.length > 10\n    ? [...a.slice(0, 10), ['Others', a.slice(10).reduce((s, x) => s + n(x[1]), 0)]]\n    : a;\n\nconst chart = c =>\n  `https://quickchart.io/chart?w=720&h=360&c=${encodeURIComponent(JSON.stringify(c))}`;\n\n/* Warehouse */\nconst inDaily = daySum(inbound, 'Receipt Time', 'Qty Stocked In');\nconst outDaily = daySum(outbound, 'Outbound Date', 'Outbound Qty');\nconst outType = grpSum(outbound, 'Outbound Type', 'Outbound Qty', 'Outbound Date');\n\n/* Finance */\nconst inCost = daySum(inbound, 'Receipt Time', 'Total Cost (RM)');\nconst outCost = daySum(outbound, 'Outbound Date', 'Logistics Subtotal / RM');\nconst shipCost = daySum(shipping, 'Outbound Time', 'Shipping Cost (RM)');\n\n/* Logistics */\nconst carrierCnt = grpCnt(shipping, 'Carrier', 'Outbound Time', 'Tracking No.');\nconst carrierQty = grpSum(shipping, 'Carrier', 'Quantity', 'Outbound Time');\nconst shipType = grpSum(shipping, 'Outbound Type', 'Quantity', 'Outbound Time');\n\n/* Customer Service */\nconst fb = feedback.filter(r => inWeek(r['  Time']));\nconst reasonCnt = grpCnt(fb, 'Specfic reasons');\nconst custCnt = top10(grpCnt(fb, 'Mobile Number/ Group From '));\n\nreturn [\n  {\n    json: {\n      dept: 'warehouse',\n      deptName: 'Warehouse',\n      to: mail.warehouse,\n      subject: `Warehouse Weekly Report｜${week}`,\n      week,\n      brief: `Total inbound ${sum(inDaily)}, total outbound ${sum(outDaily)}; inbound peak ${peak(inDaily)}, outbound peak ${peak(outDaily)}; outbound type top: ${top(outType)}.`,\n      charts: [\n        {\n          title: 'Daily Inbound vs Outbound',\n          url: chart({\n            type: 'bar',\n            data: {\n              labels: days,\n              datasets: [\n                { label: 'Inbound', data: inDaily },\n                { label: 'Outbound', data: outDaily }\n              ]\n            }\n          })\n        },\n        {\n          title: 'Outbound Type Distribution',\n          url: chart({\n            type: 'doughnut',\n            data: {\n              labels: outType.map(x => x[0]),\n              datasets: [{ data: outType.map(x => x[1]) }]\n            }\n          })\n        }\n      ]\n    }\n  },\n  {\n    json: {\n      dept: 'finance',\n      deptName: 'Finance',\n      to: mail.finance,\n      subject: `Finance Weekly Report｜${week}`,\n      week,\n      brief: `Inbound cost ${sum(inCost)} RM; outbound cost ${sum(outCost)} RM; shipping cost ${sum(shipCost)} RM; inbound cost peak ${peak(inCost)}, outbound cost peak ${peak(outCost)}, shipping cost peak ${peak(shipCost)}.`,\n      charts: [\n        {\n          title: 'Daily Inbound Cost Trend',\n          url: chart({\n            type: 'line',\n            data: {\n              labels: days,\n              datasets: [\n                { label: 'Inbound Cost', data: inCost, fill: false }\n              ]\n            }\n          })\n        },\n        {\n          title: 'Daily Outbound & Shipping Cost Trend',\n          url: chart({\n            type: 'line',\n            data: {\n              labels: days,\n              datasets: [\n                { label: 'Outbound Cost', data: outCost, fill: false },\n                { label: 'Shipping Cost', data: shipCost, fill: false }\n              ]\n            }\n          })\n        }\n      ]\n    }\n  },\n  {\n    json: {\n      dept: 'logistics',\n      deptName: 'Logistics',\n      to: mail.logistics,\n      subject: `Logistics Weekly Report｜${week}`,\n      week,\n      brief: `Total shipments ${carrierCnt.reduce((s, x) => s + n(x[1]), 0)}, total shipped quantity ${sum(carrierQty.map(x => x[1]))}; carrier shipment top: ${top(carrierCnt)}; carrier quantity top: ${top(carrierQty)}; outbound type quantity top: ${top(shipType)}.`,\n      charts: [\n        {\n          title: 'Shipments by Carrier',\n          url: chart({\n            type: 'bar',\n            data: {\n              labels: carrierCnt.map(x => x[0]),\n              datasets: [{ label: 'Shipments', data: carrierCnt.map(x => x[1]) }]\n            }\n          })\n        },\n        {\n          title: 'Quantity Shipped by Carrier',\n          url: chart({\n            type: 'bar',\n            data: {\n              labels: carrierQty.map(x => x[0]),\n              datasets: [{ label: 'Quantity', data: carrierQty.map(x => x[1]) }]\n            }\n          })\n        },\n        {\n          title: 'Shipping Quantity by Outbound Type',\n          url: chart({\n            type: 'doughnut',\n            data: {\n              labels: shipType.map(x => x[0]),\n              datasets: [{ data: shipType.map(x => x[1]) }]\n            }\n          })\n        }\n      ]\n    }\n  },\n  {\n    json: {\n      dept: 'customer',\n      deptName: 'Customer Service',\n      to: mail.customer,\n      subject: `Customer Service Weekly Report｜${week}`,\n      week,\n      brief: `Total complaints this week ${fb.length}; complaint reason top: ${top(reasonCnt)}; customer complaint top: ${top(custCnt, 5)}.`,\n      charts: [\n        {\n          title: 'Complaint Reason Distribution',\n          url: chart({\n            type: 'doughnut',\n            data: {\n              labels: reasonCnt.map(x => x[0]),\n              datasets: [{ data: reasonCnt.map(x => x[1]) }]\n            }\n          })\n        },\n        {\n          title: 'Complaint Count per Customer',\n          url: chart({\n            type: 'bar',\n            data: {\n              labels: custCnt.map(x => x[0]),\n              datasets: [{ label: 'Complaints', data: custCnt.map(x => x[1]) }]\n            }\n          })\n        }\n      ]\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1440,
+        2320
+      ],
+      "id": "cf3c19d7-b45d-4b3b-913a-0770baacd654",
+      "name": "Generate departmental data"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all().map(i => i.json);\n\nfunction getDept(nameZh, nameEn) {\n  return items.find(x => x.deptName === nameZh || x.dept === nameEn) || {};\n}\n\nconst warehouse = getDept('Warehouse', 'warehouse');\nconst finance = getDept('Finance', 'finance');\nconst logistics = getDept('Logistics', 'logistics');\nconst customer = getDept('Customer Service', 'customer');\n\nconst week =\n  warehouse.week ||\n  finance.week ||\n  logistics.week ||\n  customer.week ||\n  '';\n\nreturn [{\n  json: {\n    to: 'yinpenghua@outlook.com',\n    subject: `CEO Weekly Report Overview｜${week}`,\n    week,\n\n    depts: [\n      {\n        deptName: warehouse.deptName || 'Warehouse',\n        brief: warehouse.brief || '',\n        charts: warehouse.charts || [],\n        analysis: warehouse.output || warehouse.text || warehouse.response || ''\n      },\n      {\n        deptName: finance.deptName || 'Finance',\n        brief: finance.brief || '',\n        charts: finance.charts || [],\n        analysis: finance.output || finance.text || finance.response || ''\n      },\n      {\n        deptName: logistics.deptName || 'Logistics',\n        brief: logistics.brief || '',\n        charts: logistics.charts || [],\n        analysis: logistics.output || logistics.text || logistics.response || ''\n      },\n      {\n        deptName: customer.deptName || 'Customer Service',\n        brief: customer.brief || '',\n        charts: customer.charts || [],\n        analysis: customer.output || customer.text || customer.response || ''\n      }\n    ]\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -352,
+        2080
+      ],
+      "id": "ff972b0b-64b1-4170-9947-8d6484806d0d",
+      "name": "Generate CEO data"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const src = $json || {};\nconst aiText = String(\n  src.output ??\n  src.text ??\n  src.response ??\n  src.content ??\n  src.message ??\n  ''\n);\n\nfunction e(s) {\n  return String(s ?? '')\n    .replace(/&/g, '&amp;')\n    .replace(/</g, '&lt;')\n    .replace(/>/g, '&gt;');\n}\n\nfunction pick(tag) {\n  const re = new RegExp(`\\\\[${tag}\\\\]([\\\\s\\\\S]*?)\\\\[\\\\/${tag}\\\\]`, 'i');\n  const m = aiText.match(re);\n  return m ? m[1].trim() : '';\n}\n\nfunction lines(text, max = 10) {\n  return String(text || '')\n    .split(/\\r?\\n+/)\n    .map(x => x.replace(/^[\\-\\d\\.\\)\\s、]+/, '').trim())\n    .filter(Boolean)\n    .slice(0, max);\n}\n\nconst week = src.week || '';\nconst depts = Array.isArray(src.depts) ? src.depts : [];\n\nconst execSummary = pick('EXEC_SUMMARY');\nconst highlights = lines(pick('HIGHLIGHTS'), 3);\nconst risks = lines(pick('RISKS'), 3);\nconst deptView = pick('DEPT_VIEW');\nconst actions = lines(pick('ACTIONS'), 3);\n\nconst deptSections = depts.map(d => {\n  const charts = Array.isArray(d.charts) ? d.charts : [];\n  const chartHtml = charts.map(c => `\n    <div style=\"margin:14px 0;\">\n      <h4 style=\"margin:0 0 8px;font-size:16px;\">${e(c.title || '')}</h4>\n      <img src=\"${e(c.url || '')}\" style=\"max-width:100%;border-radius:8px;border:1px solid #e5e7eb;\">\n    </div>\n  `).join('');\n\n  return `\n    <div style=\"margin-top:24px;padding:20px;background:#fff;border-radius:12px;border:1px solid #e5e7eb;\">\n      <h3 style=\"margin:0 0 10px;font-size:18px;\">${e(d.deptName || '')}</h3>\n      <p style=\"margin:0 0 12px;font-size:14px;line-height:1.8;color:#374151;\">${e(d.brief || '')}</p>\n      ${chartHtml}\n    </div>\n  `;\n}).join('');\n\nconst html = `\n<div style=\"max-width:1000px;margin:0 auto;padding:24px;background:#f3f4f6;font-family:Arial,Helvetica,sans-serif;\">\n  <div style=\"background:#111827;color:#fff;padding:28px;border-radius:16px 16px 0 0;\">\n    <h1 style=\"margin:0;font-size:26px;\">CEO Weekly Report Overview</h1>\n    <p style=\"margin:10px 0 0;font-size:14px;color:#d1d5db;\">Period: ${e(week)}</p>\n  </div>\n\n  <div style=\"background:#fff;padding:28px;border-radius:0 0 16px 16px;\">\n    <div style=\"padding:18px 20px;background:#f9fafb;border-radius:12px;\">\n      <h2 style=\"margin:0 0 10px;font-size:20px;\">Executive Summary</h2>\n      <p style=\"margin:0;font-size:14px;line-height:1.9;color:#374151;\">${e(execSummary)}</p>\n    </div>\n\n    <div style=\"display:flex;gap:16px;flex-wrap:wrap;margin-top:20px;\">\n      <div style=\"flex:1;min-width:280px;padding:18px;background:#eef6ff;border-radius:12px;\">\n        <h2 style=\"margin:0 0 10px;font-size:18px;\">Highlights</h2>\n        <ol style=\"margin:0;padding-left:20px;font-size:14px;line-height:1.9;color:#374151;\">\n          ${highlights.map(x => `<li>${e(x)}</li>`).join('')}\n        </ol>\n      </div>\n      <div style=\"flex:1;min-width:280px;padding:18px;background:#fff4f4;border-radius:12px;\">\n        <h2 style=\"margin:0 0 10px;font-size:18px;\">Key Risks</h2>\n        <ol style=\"margin:0;padding-left:20px;font-size:14px;line-height:1.9;color:#374151;\">\n          ${risks.map(x => `<li>${e(x)}</li>`).join('')}\n        </ol>\n      </div>\n    </div>\n\n    <div style=\"margin-top:24px;padding:18px;background:#f9fafb;border-radius:12px;\">\n      <h2 style=\"margin:0 0 10px;font-size:18px;\">Department Perspectives</h2>\n      <p style=\"margin:0;white-space:pre-line;font-size:14px;line-height:1.9;color:#374151;\">${e(deptView)}</p>\n    </div>\n\n    <div style=\"margin-top:24px;padding:18px;background:#eefaf0;border-radius:12px;\">\n      <h2 style=\"margin:0 0 10px;font-size:18px;\">Executive Recommendations</h2>\n      <ol style=\"margin:0;padding-left:20px;font-size:14px;line-height:1.9;color:#374151;\">\n        ${actions.map(x => `<li>${e(x)}</li>`).join('')}\n      </ol>\n    </div>\n\n    ${deptSections}\n  </div>\n</div>`;\n\nreturn {\n  json: {\n    to: src.to || '',\n    subject: src.subject || `CEO Weekly Report Overview｜${week}`,\n    html\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        336,
+        1776
+      ],
+      "id": "037cf74f-336d-4129-a7cc-59f73b3e6135",
+      "name": "Generate CEO HTML"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=请基于输入数据生成部门周报分析。\n\n严格按下面格式输出纯文本，不要JSON，不要Markdown，不要HTML，不要额外解释：\n\n[O]\n一句话概括本周情况\n[/O]\n\n[C1]\n对应图1的分析，1-2句话\n[/C1]\n\n[C2]\n对应图2的分析，1-2句话\n[/C2]\n\n[C3]\n如果有第3张图，就写1-2句话；如果没有第3张图，留空\n[/C3]\n\n[S]\n整体总分析，1-2句话\n[/S]\n\n[R]\n建议1\n建议2\n建议3\n[/R]\n\n要求：\n- 语言：English\n- 只基于输入数据\n- 不要编造不存在的数据\n- 建议必须具体、可执行\n- 不要重复图表标题\n\n部门：{{$json.deptName}}\n周期：{{$json.week}}\n图表：{{$json.charts.map(x => x.title).join('；')}}\n摘要：{{$json.brief}}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -1088,
+        2528
+      ],
+      "id": "0a904a40-0b73-421f-bb1f-25fc6d011198",
+      "name": "Analysis 1"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1lfnBHw6PUXt6pYSUrR4t_5DMBWVUfmwQ"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -2912,
+        464
+      ],
+      "id": "4151ccdb-ef1c-4c3e-82f6-71e7782b0675",
+      "name": "Download Logistics Standard Operating Procedure (SOP)",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "urqBZKf8xyGkEKLQ",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1fGZStlYTkQa1lfigaVq5lCAaHZd9i6m_"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -2912,
+        784
+      ],
+      "id": "f455c357-634d-4d76-bccd-1c706060a48a",
+      "name": "Download policy",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "urqBZKf8xyGkEKLQ",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Sorting by name and calculation').item.json.sendChannel }}",
+                    "rightValue": "whatsapp",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "004e22be-e8eb-4eff-9a4d-5c19f15ea3a6"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "whatsapp"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "d1022f9d-72c2-4014-b148-6cb88468d159",
+                    "leftValue": "={{ $('Sorting by name and calculation').item.json.sendChannel }}",
+                    "rightValue": "gmail",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "gmail"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "896377ae-b6ec-4312-b566-39d38d248f7b",
+                    "leftValue": "={{ $('Sorting by name and calculation').item.json.sendChannel }}",
+                    "rightValue": "none",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "error"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -1120,
+        1360
+      ],
+      "id": "685e5aff-2332-4066-b682-8baf66ba88d1",
+      "name": "Customer Preferred Channel"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1FZW7iZGd8WNlSJnsrJYsV5EGt72adBeBec_sLB06rcM",
+          "mode": "list",
+          "cachedResultName": "n8n",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FZW7iZGd8WNlSJnsrJYsV5EGt72adBeBec_sLB06rcM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 922674509,
+          "mode": "list",
+          "cachedResultName": "Shipping Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FZW7iZGd8WNlSJnsrJYsV5EGt72adBeBec_sLB06rcM/edit#gid=922674509"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -2976,
+        1712
+      ],
+      "id": "3568afe1-ddd4-42b6-b6ce-ecb78f96de79",
+      "name": "Logistics",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "TwrAR5nuEuo01pxx",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1FZW7iZGd8WNlSJnsrJYsV5EGt72adBeBec_sLB06rcM",
+          "mode": "list",
+          "cachedResultName": "n8n",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FZW7iZGd8WNlSJnsrJYsV5EGt72adBeBec_sLB06rcM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1888629658,
+          "mode": "list",
+          "cachedResultName": "Customer Order Form",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FZW7iZGd8WNlSJnsrJYsV5EGt72adBeBec_sLB06rcM/edit#gid=1888629658"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -2976,
+        1376
+      ],
+      "id": "a0344d09-b160-467f-807a-5df3d35d3673",
+      "name": "Financial_Report1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "TwrAR5nuEuo01pxx",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1FZW7iZGd8WNlSJnsrJYsV5EGt72adBeBec_sLB06rcM",
+          "mode": "list",
+          "cachedResultName": "n8n",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FZW7iZGd8WNlSJnsrJYsV5EGt72adBeBec_sLB06rcM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 328669019,
+          "mode": "list",
+          "cachedResultName": "Customer Shipment List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FZW7iZGd8WNlSJnsrJYsV5EGt72adBeBec_sLB06rcM/edit#gid=328669019"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -2976,
+        1552
+      ],
+      "id": "9fc0bb05-8967-4e3b-a4f2-1e6a7540d467",
+      "name": "Financial_Report2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "TwrAR5nuEuo01pxx",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1dFn-6Ybf2N2DOtJ_V_n1Gj-DbewTHj5LqS2PiC0LsJY",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "工作表1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dFn-6Ybf2N2DOtJ_V_n1Gj-DbewTHj5LqS2PiC0LsJY/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -2976,
+        2352
+      ],
+      "id": "4067a8a7-5e08-489c-aeb4-508eae664a31",
+      "name": "Agent_Feedback",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "TwrAR5nuEuo01pxx",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1FZW7iZGd8WNlSJnsrJYsV5EGt72adBeBec_sLB06rcM",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1888629658,
+          "mode": "list",
+          "cachedResultName": "Customer Order Form",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FZW7iZGd8WNlSJnsrJYsV5EGt72adBeBec_sLB06rcM/edit#gid=1888629658"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Order No.",
+              "lookupValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('values0_Value', ``, 'string') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        -1552,
+        432
+      ],
+      "id": "bb7d7ef0-a4f0-4e20-8f60-303b81f6e63e",
+      "name": "Customer_Order_Form",
+      "notesInFlow": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "TwrAR5nuEuo01pxx",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "CRITICAL TOOL FOR STORAGE & STOCK. Use this tool when the user asks about DD order details, total items in stock, or warehousing costs. This database strictly contains: [Order Time, Order No., Customer Name, Product Type, Quantity, Storage Fee Receivable (MYR)]. DO NOT use for shipping status."
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1FZW7iZGd8WNlSJnsrJYsV5EGt72adBeBec_sLB06rcM",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 922674509,
+          "mode": "list",
+          "cachedResultName": "Shipping Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FZW7iZGd8WNlSJnsrJYsV5EGt72adBeBec_sLB06rcM/edit#gid=922674509"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Outbound Order No.",
+              "lookupValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('values0_Value', ``, 'string') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        -1392,
+        432
+      ],
+      "id": "26f23b99-e758-477b-b496-98edcf39ca87",
+      "name": "Shipping_Sheet",
+      "notesInFlow": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "TwrAR5nuEuo01pxx",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "CRITICAL TOOL FOR SHIPPING & TRACKING. Use this tool ONLY when the user asks about outbound delivery, shipping fees, or tracking status. This database strictly contains: [Customer Name, Order No., Outbound Time, Outbound Order No., Outbound Type, Product Type, Outbound Quantity, Receivable Logistics Price]. DO NOT use for Storage Fees."
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1FZW7iZGd8WNlSJnsrJYsV5EGt72adBeBec_sLB06rcM",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 328669019,
+          "mode": "list",
+          "cachedResultName": "Customer Shipment List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FZW7iZGd8WNlSJnsrJYsV5EGt72adBeBec_sLB06rcM/edit#gid=328669019"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Order No.",
+              "lookupValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('values0_Value', ``, 'string') }}"
+            },
+            {
+              "lookupColumn": "Outbound Order No.",
+              "lookupValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('values1_Value', ``, 'string') }}"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": false
+        }
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        -1216,
+        432
+      ],
+      "id": "2d8babc7-0243-460a-8cb4-7a41986a686b",
+      "name": "Customer_Shipment_List",
+      "notesInFlow": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "TwrAR5nuEuo01pxx",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "CRITICAL DATA PARSING RULE:\nWhen the tool returns data, YOU MUST read it. \n- The field \"Product Type\" is the product name.\n- The field \"Outbound Quantity\" is the quantity.\n- The field \"Outbound Order No.\" is the CK number.\n- The field \"Outbound Time.\" is the Time.\nDO NOT say \"not found\" if the tool returns a JSON array with these fields. Read the JSON and tell the user!"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Financial_Report1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Financial_Report2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Logistics",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Inbound",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "outbound",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Download policy",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Download Logistics Standard Operating Procedure (SOP)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Agent_Feedback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ],
+        [
+          {
+            "node": "错误分支发给管理员2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Inbound": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "outbound": {
+      "main": [
+        [
+          {
+            "node": "If6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Sales Agent": {
+      "main": [
+        [
+          {
+            "node": "Output Parser (Precision Cutting)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Create Product Catalogue",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Interceptor: Is it @Chatbot?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Google Gemini": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Create Product Catalogue",
+            "type": "ai_embedding",
+            "index": 0
+          },
+          {
+            "node": "Logistics Knowledge Base",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Logistics Knowledge Base": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Logistics_Policy",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Create Product Catalogue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Logistics_Policy": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Sales Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Warehouse_Outbound_Details": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Sales Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Warehouse_Inbound_Records": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Sales Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Vertex Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Logistics_Policy",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Vertex Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Sales Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "错误分支发给管理员",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If5": {
+      "main": [
+        [
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "错误分支发给管理员1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 1
+          }
+        ],
+        [
+          {
+            "node": "错误分支发给管理员3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If6": {
+      "main": [
+        [
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 2
+          }
+        ],
+        [
+          {
+            "node": "错误分支发给管理员4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Sorting by name and calculation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Customer Preferred Channel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Vertex Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "🚨 Send the financial report to the customer service manager",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Sales Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sorting by name and calculation": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Free OCR engine": {
+      "main": [
+        [
+          {
+            "node": "Collage (Set)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Collage (Set)": {
+      "main": [
+        [
+          {
+            "node": "AI Sales Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Plain Text Direct (Set)": {
+      "main": [
+        [
+          {
+            "node": "AI Sales Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Interceptor: Is it @Chatbot?": {
+      "main": [
+        [
+          {
+            "node": "Message type router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message type router": {
+      "main": [
+        [
+          {
+            "node": "Free OCR engine",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Plain Text Direct (Set)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Output Parser (Precision Cutting)": {
+      "main": [
+        [
+          {
+            "node": "Action Dispatcher (Switch)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Action Dispatcher (Switch)": {
+      "main": [
+        [
+          {
+            "node": "Send a clean reply to the user",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create a customer complaint ticket (Google Sheets)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Is all the data in?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a clean reply to the user",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "🚨 Send an alert to the customer service manager",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a customer complaint ticket (Google Sheets)": {
+      "main": [
+        [
+          {
+            "node": "Send a clean reply to the user",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is all the data in?": {
+      "main": [
+        [
+          {
+            "node": "Send a clean reply to the user",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Integration with the WMS Order Creation API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a clean reply to the user": {
+      "main": [
+        []
+      ]
+    },
+    "Integration with the WMS Order Creation API": {
+      "main": [
+        [
+          {
+            "node": "Send a clean reply to the user",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge2": {
+      "main": [
+        [
+          {
+            "node": "Generate CEO HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Analysis 1",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge3": {
+      "main": [
+        [
+          {
+            "node": "Generate HTML",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate CEO data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge4": {
+      "main": [
+        [
+          {
+            "node": "Generate departmental data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Vertex Chat Model5": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Analysis 1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Vertex Chat Model6": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate HTML": {
+      "main": [
+        [
+          {
+            "node": "Send a message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate departmental data": {
+      "main": [
+        [
+          {
+            "node": "Analysis 1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate CEO data": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate CEO HTML": {
+      "main": [
+        [
+          {
+            "node": "CEO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analysis 1": {
+      "main": [
+        [
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Download Logistics Standard Operating Procedure (SOP)": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download policy": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Customer Preferred Channel": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a message3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Logistics": {
+      "main": [
+        [
+          {
+            "node": "If5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Financial_Report1": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Financial_Report2": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agent_Feedback": {
+      "main": [
+        [
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Send a message3": {
+      "main": [
+        []
+      ]
+    },
+    "Customer_Order_Form": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Sales Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Shipping_Sheet": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Sales Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Customer_Shipment_List": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Sales Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "9582994f-3b2f-4fa0-ae41-697fd3067549",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "54a8ac695934b4418079e71f5e6106488d20a4ec3332e565573718ab1064202b"
+  },
+  "id": "IEyQlRJQg65bzMFZ",
+  "tags": [
+    {
+      "name": "Chatbot",
+      "id": "69XdqBUfIIRlCoAp",
+      "updatedAt": "2026-03-26T05:59:32.815Z",
+      "createdAt": "2026-03-26T05:59:32.815Z"
+    },
+    {
+      "name": "Finanal Report",
+      "id": "uHgJDtQCJ7qvbdT3",
+      "updatedAt": "2026-03-26T05:59:44.516Z",
+      "createdAt": "2026-03-26T05:59:44.516Z"
+    },
+    {
+      "name": "HTML weekly report",
+      "id": "uGoO4utJZbosOlEe",
+      "updatedAt": "2026-03-26T06:00:55.668Z",
+      "createdAt": "2026-03-26T06:00:55.668Z"
+    }
+  ]
+}
